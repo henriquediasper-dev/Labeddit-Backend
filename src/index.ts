@@ -1,6 +1,9 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
+import { userRouter } from "./router/UserRouter";
+import { postRouter } from "./router/PostRouter";
+import { commentRouter } from "./router/CommentRouter";
 
 dotenv.config();
 
@@ -13,4 +16,6 @@ app.listen(Number(process.env.PORT) || 3003, () => {
   console.log(`Servidor rodando na porta ${Number(process.env.PORT) || 3003}`);
 });
 
-// routers das entidades
+app.use("/users", userRouter);
+app.use("/posts", postRouter);
+app.use("/comments", commentRouter);
