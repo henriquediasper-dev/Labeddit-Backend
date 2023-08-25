@@ -1,13 +1,17 @@
 import z from "zod";
 
-export interface createPostInputDTO {
-  name: string;
+export interface CreatePostInputDTO {
   token: string;
+  content: string;
 }
 
-export type createPostOutputDTO = undefined;
+export interface CreatePostOutputDTO {
+  message: "Post criado com sucesso";
+}
 
-export const creatPostSchema = z.object({
-  name: z.string().min(1),
-  token: z.string().min(1),
-});
+export const CreatePostSchema = z
+  .object({
+    token: z.string().min(1),
+    content: z.string().min(1),
+  })
+  .transform((data) => data as CreatePostInputDTO);
