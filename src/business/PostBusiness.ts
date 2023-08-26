@@ -3,11 +3,21 @@ import {
   CreatePostInputDTO,
   CreatePostOutputDTO,
 } from "../dtos/post/createPost.dto";
+import {
+  DeletePostInputDTO,
+  DeletePostOutputDTO,
+} from "../dtos/post/deletePost.dto";
 import { EditPostInputDTO, EditPostOutputDTO } from "../dtos/post/editPost.dto";
 import { GetPostInputDTO, GetPostOutputDTO } from "../dtos/post/getPost.dto";
+import {
+  LikeOrDislikePostInputDTO,
+  LikeOrDislikePostOutputDTO,
+} from "../dtos/post/likeOrDislikePost.dto";
+import { ForbiddenError } from "../errors/ForbiddenError";
 import { NotFoundError } from "../errors/NotFoundError";
 import { UnauthorizedError } from "../errors/UnauthorizedError";
 import { Post } from "../models/Post";
+import { USER_ROLES } from "../models/User";
 import { IdGenerator } from "../services/IdGenerator";
 import { TokenManager } from "../services/TokenManager";
 
@@ -61,7 +71,7 @@ export class PostBusiness {
     const payload = this.tokenManager.getPayload(token);
 
     if (!payload) {
-      throw new UnauthorizedError("Invalid token");
+      throw new UnauthorizedError("Token inválido");
     }
 
     const postsWithCreatorName =
@@ -94,7 +104,7 @@ export class PostBusiness {
     const payload = this.tokenManager.getPayload(token);
 
     if (!payload) {
-      throw new UnauthorizedError("Invalid token");
+      throw new UnauthorizedError("Token inválido");
     }
 
     const postDBExists = await this.postDatabase.findPostById(idToEdit);
@@ -128,5 +138,43 @@ export class PostBusiness {
     const output: EditPostOutputDTO = undefined;
 
     return output;
+  };
+
+  public deletePost = async (
+    input: DeletePostInputDTO
+  ): Promise<DeletePostOutputDTO> => {
+    const { token, idToDelete } = input;
+
+    const payload = this.tokenManager.getPayload(token);
+
+    if (!payload) {
+      throw new UnauthorizedError("Token inválido");
+    }
+
+    const postDBExists = await this.postDatabase.findPostById(idToDelete);
+
+    if (!postDBExists) {
+      throw new NotFoundError("Post não encontrado");
+    }
+
+    if (payload.role !== USER_ROLES.ADMIN) {
+      if (payload.id !== postDBExists.creator_id) {
+        throw new ForbiddenError("Only the creator of the post can delete it");
+      }
+    }
+
+    await this.postDatabase.deletePost(idToDelete);
+
+    const output: DeletePostOutputDTO = undefined;
+
+    return output;
+  };
+
+  public likeOrDislikePost = async (
+    input: LikeOrDislikePostInputDTO
+  ): Promise<LikeOrDislikePostOutputDTO> => {
+    const { idToLikeOrDislike, token, like } = input;
+
+    const payload = this.tokenManager.getPayload(token);
   };
 }
