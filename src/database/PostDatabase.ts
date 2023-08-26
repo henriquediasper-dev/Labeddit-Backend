@@ -58,4 +58,18 @@ export class PostDatabase extends BaseDatabase {
       .where({ [`${PostDatabase.TABLE_POSTS}.id`]: id });
     return result as PostDBWithCreatorName | undefined;
   };
+
+  public findPostById = async (id: string): Promise<PostDB | undefined> => {
+    const [postDB]: PostDB[] | undefined[] = await BaseDatabase.connection(
+      PostDatabase.TABLE_POSTS
+    ).where({ id });
+
+    return postDB;
+  };
+
+  public editPost = async (postDB: PostDB): Promise<void> => {
+    await BaseDatabase.connection(PostDatabase.TABLE_POSTS)
+      .update(postDB)
+      .where({ id: postDB.id });
+  };
 }
