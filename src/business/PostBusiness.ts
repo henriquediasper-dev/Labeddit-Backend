@@ -16,7 +16,7 @@ import {
 import { ForbiddenError } from "../errors/ForbiddenError";
 import { NotFoundError } from "../errors/NotFoundError";
 import { UnauthorizedError } from "../errors/UnauthorizedError";
-import { Post } from "../models/Post";
+import { LikeDislikePostDB, POST_LIKE, Post } from "../models/Post";
 import { USER_ROLES } from "../models/User";
 import { IdGenerator } from "../services/IdGenerator";
 import { TokenManager } from "../services/TokenManager";
@@ -176,5 +176,69 @@ export class PostBusiness {
     const { idToLikeOrDislike, token, like } = input;
 
     const payload = this.tokenManager.getPayload(token);
+
+    if (!payload) {
+      throw new UnauthorizedError("Token inválido");
+    }
+
+    const postDBWithCreatorName =
+      await this.postDatabase.findPostsWithCreatorNameById(idToLikeOrDislike);
+
+    if (!postDBWithCreatorName) {
+      throw new NotFoundError("Post com essa id não existe");
+    }
+
+    const post = new Post(
+      postDBWithCreatorName.id,
+      postDBWithCreatorName.post_content,
+      postDBWithCreatorName.likes,
+      postDBWithCreatorName.dislikes,
+      postDBWithCreatorName.comments,
+      postDBWithCreatorName.created_at,
+      postDBWithCreatorName.creator_id,
+      postDBWithCreatorName.creator_name
+    );
+
+    const likeSQLite = like ? 1 : 0;
+
+    const likeOrDislikeDB: LikeDislikePostDB = {
+      user_id: payload.id,
+      post_id: idToLikeOrDislike,
+      like: likeSQLite,
+    };
+
+    const likeDislikeExist = await this.postDatabase.findLikeDislike(
+      likeOrDislikeDB
+    );
+
+    if (likeDislikeExist === POST_LIKE.ALREADY_LIKED) {
+      if (like) {
+        await this.postDatabase.removeLikeOrDislike(likeOrDislikeDB);
+        post.removeLike();
+      } else {
+        await this.postDatabase.updateLikeDislike(likeOrDislikeDB);
+        post.removeLike();
+        post.addDislike();
+      }
+    } else if (likeDislikeExist === POST_LIKE.ALREADY_DISLIKED) {
+      if (like === false) {
+        await this.postDatabase.updateLikeDislike(likeOrDislikeDB);
+        post.removeDislike();
+      } else {
+        await this.postDatabase.updateLikeDislike(likeOrDislikeDB);
+        post.removeDislike();
+        post.addLike();
+      }
+    } else {
+      await this.postDatabase.insertLikeDislike(likeOrDislikeDB);
+      like ? post.addLike() : post.addDislike();
+    }
+
+    const updatePostDB = post.toDBModel();
+    await this.postDatabase.editPost(updatePostDB);
+
+    const output: LikeOrDislikePostOutputDTO = undefined;
+
+    return output;
   };
 }
