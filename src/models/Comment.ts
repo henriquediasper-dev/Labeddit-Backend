@@ -115,10 +115,10 @@ export class Comment {
   }
 
   public getCreatorName(): string {
-    return this.creatorId;
+    return this.creatorName;
   }
   public setCreatorName(value: string) {
-    this.creatorId = value;
+    this.creatorName = value;
   }
 
   public toDBModel(): CommentDB {
