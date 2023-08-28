@@ -1,3 +1,4 @@
+import { notDeepEqual } from "assert";
 import { CommentDatabase } from "../database/CommentDatabase";
 import { PostDatabase } from "../database/PostDatabase";
 import { UserDatabase } from "../database/UserDatabase";
@@ -9,13 +10,23 @@ import {
   GetCommentsInputDTO,
   GetCommentsOutputDTO,
 } from "../dtos/comment/getCommentsByPostId.dto";
+import {
+  LikeOrDislikeCommentInputDTO,
+  LikeOrDislikeCommentOutputDTO,
+} from "../dtos/comment/likeOrDislikeComment.dto";
 import { BadRequestError } from "../errors/BadRequestError";
 import { NotFoundError } from "../errors/NotFoundError";
 import { UnauthorizedError } from "../errors/UnauthorizedError";
-import { Comment, PostCommentDB } from "../models/Comment";
+import {
+  COMMENT_LIKE,
+  Comment,
+  LikeDislikeCommentDB,
+  PostCommentDB,
+} from "../models/Comment";
 import { Post } from "../models/Post";
 import { IdGenerator } from "../services/IdGenerator";
 import { TokenManager } from "../services/TokenManager";
+import { ForbiddenError } from "../errors/ForbiddenError";
 
 export class CommentBusiness {
   constructor(
@@ -120,6 +131,86 @@ export class CommentBusiness {
 
     const output: GetCommentsOutputDTO = {
       comments: commentsDB,
+    };
+
+    return output;
+  };
+
+  public likeOrDislikeComment = async (
+    input: LikeOrDislikeCommentInputDTO
+  ): Promise<LikeOrDislikeCommentOutputDTO> => {
+    const { token, idToLikeOrDislike, like } = input;
+
+    const payload = this.tokenManager.getPayload(token);
+
+    if (!payload) {
+      throw new UnauthorizedError("Token inválido");
+    }
+
+    const commentIdExists =
+      await this.commentDatabase.findCommentsWithCreatorNameById(
+        idToLikeOrDislike
+      );
+
+    if (!commentIdExists) {
+      throw new NotFoundError("Comentário não encontrado");
+    }
+
+    const comment = new Comment(
+      commentIdExists.id,
+      commentIdExists.comment_content,
+      commentIdExists.likes,
+      commentIdExists.dislikes,
+      commentIdExists.created_at,
+      commentIdExists.creator_id,
+      commentIdExists.creator_name
+    );
+
+    if (payload.id === comment.getCreatorId()) {
+      throw new ForbiddenError(
+        "O criador do comentário não pode dar like ou dislike"
+      );
+    }
+
+    const likeSQLite = like ? 1 : 0;
+
+    const likeOrDislikeDB: LikeDislikeCommentDB = {
+      user_id: payload.id,
+      comment_id: commentIdExists.id,
+      like: likeSQLite,
+    };
+
+    const likeOrDislikeCommentExists =
+      await this.commentDatabase.findLikeOrDislikeComment(likeOrDislikeDB);
+
+    if (likeOrDislikeCommentExists === COMMENT_LIKE.ALREADY_LIKED) {
+      if (like) {
+        await this.commentDatabase.removeLikeOrDislike(likeOrDislikeDB);
+        comment.removeLike();
+      } else {
+        await this.commentDatabase.updateLikeOrDislike(likeOrDislikeDB);
+        comment.removeLike();
+        comment.addDislike();
+      }
+    } else if (likeOrDislikeCommentExists === COMMENT_LIKE.ALREADY_DISLIKED) {
+      if (like === false) {
+        await this.commentDatabase.removeLikeOrDislike(likeOrDislikeDB);
+        comment.removeDislike();
+      } else {
+        await this.commentDatabase.updateLikeOrDislike(likeOrDislikeDB);
+        comment.removeDislike();
+        comment.addLike();
+      }
+    } else {
+      await this.commentDatabase.insertLikeOrDislike(likeOrDislikeDB);
+      like ? comment.addLike() : comment.addDislike();
+    }
+
+    const updateCommentDB = comment.toDBModel();
+    await this.commentDatabase.editComment(updateCommentDB);
+
+    const output: LikeOrDislikeCommentOutputDTO = {
+      message: "Like ou Dislike",
     };
 
     return output;
