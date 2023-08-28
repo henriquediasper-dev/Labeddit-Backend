@@ -83,47 +83,47 @@ export class PostDatabase extends BaseDatabase {
   };
 
   public findLikeDislike = async (
-    likeDislikePostDB: LikeDislikePostDB
+    likeOrDislike: LikeDislikePostDB
   ): Promise<POST_LIKE | undefined> => {
     const [result] = await BaseDatabase.connection(
       PostDatabase.TABLE_LIKES_DISLIKES_POST
     )
       .select()
       .where({
-        user_id: likeDislikePostDB.user_id,
-        post_id: likeDislikePostDB.post_id,
+        user_id: likeOrDislike.user_id,
+        post_id: likeOrDislike.post_id,
       });
 
     return result as POST_LIKE | undefined;
   };
 
   public removeLikeOrDislike = async (
-    likeDislikePostDB: LikeDislikePostDB
+    likeOrDislike: LikeDislikePostDB
   ): Promise<void> => {
     await BaseDatabase.connection(PostDatabase.TABLE_LIKES_DISLIKES_POST)
       .delete()
       .where({
-        user_id: likeDislikePostDB.user_id,
-        post_id: likeDislikePostDB.post_id,
+        user_id: likeOrDislike.user_id,
+        post_id: likeOrDislike.post_id,
       });
   };
 
   public updateLikeDislike = async (
-    likeDislikePostDB: LikeDislikePostDB
+    likeOrDislike: LikeDislikePostDB
   ): Promise<void> => {
     await BaseDatabase.connection(PostDatabase.TABLE_LIKES_DISLIKES_POST)
-      .update(likeDislikePostDB)
+      .update(likeOrDislike)
       .where({
-        user_id: likeDislikePostDB.user_id,
-        post_id: likeDislikePostDB.post_id,
+        user_id: likeOrDislike.user_id,
+        post_id: likeOrDislike.post_id,
       });
   };
 
   public insertLikeDislike = async (
-    likeDislikePostDB: LikeDislikePostDB
+    likeOrDislike: LikeDislikePostDB
   ): Promise<void> => {
     await BaseDatabase.connection(
       PostDatabase.TABLE_LIKES_DISLIKES_POST
-    ).insert(likeDislikePostDB);
+    ).insert(likeOrDislike);
   };
 }

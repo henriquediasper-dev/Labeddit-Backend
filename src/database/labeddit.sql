@@ -70,3 +70,9 @@ DROP TABLE comments;
 DROP TABLE posts;
 
 DROP TABLE users;
+
+/*usuários, emails e senhas
+ fulano | fulano@email.com | fulano10
+ Beltrana | Beltrana@email.com | Beltrana02
+ Ciclano | Ciclano@email.com | Ciclano03
+ */

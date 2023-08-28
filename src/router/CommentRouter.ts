@@ -24,4 +24,4 @@ commentRouter.get("/:id", commentController.getComments);
 // postRouter.put("/:id", postController.editPost);
 // postRouter.delete("/:id", postController.detelePost);
 
-// postRouter.put("/:id/like", postController.likeOrDislikePost);
+commentRouter.put("/:id/like", commentController.likeOrDislikeComment);
