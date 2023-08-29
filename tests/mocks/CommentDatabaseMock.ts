@@ -5,8 +5,8 @@ import {
   LikeDislikeCommentDB,
   PostCommentDB,
   PostCommentModel,
-} from "../../models/Comment";
-import { BaseDatabase } from "../../database/BaseDatabase";
+} from "../../src/models/Comment";
+import { BaseDatabase } from "../../src/database/BaseDatabase";
 
 const commentsDBMock: PostCommentModel[] = [
   {

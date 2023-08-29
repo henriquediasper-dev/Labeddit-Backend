@@ -1,10 +1,10 @@
-import { BaseDatabase } from "../../database/BaseDatabase";
+import { BaseDatabase } from "../../src/database/BaseDatabase";
 import {
   LikeDislikePostDB,
   PostDB,
   PostDBWithCreatorName,
   POST_LIKE,
-} from "../../models/Post";
+} from "../../src/models/Post";
 
 const postDBMock: PostDBWithCreatorName[] = [
   {

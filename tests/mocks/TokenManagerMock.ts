@@ -1,4 +1,4 @@
-import { TokenPayload, USER_ROLES } from "../../models/User";
+import { TokenPayload, USER_ROLES } from "../../src/models/User";
 
 export class TokenManagerMock {
   public createToken = (payload: TokenPayload): string => {

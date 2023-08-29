@@ -1,5 +1,5 @@
-import { USER_ROLES, UserDB } from "../../models/User";
-import { BaseDatabase } from "../../database/BaseDatabase";
+import { USER_ROLES, UserDB } from "../../src/models/User";
+import { BaseDatabase } from "../../src/database/BaseDatabase";
 
 const usersMock: UserDB[] = [
   {
@@ -32,6 +32,10 @@ export class UserDatabaseMock extends BaseDatabase {
   public static TABLE_USERS = "users";
 
   public insertUser = async (newUser: UserDB): Promise<void> => {};
+
+  public findUserById = async (id: string): Promise<UserDB | undefined> => {
+    return usersMock.find((user) => user.id === id);
+  };
 
   public findUserByEmail = async (
     email: string
