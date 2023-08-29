@@ -59,6 +59,16 @@ CREATE TABLE
         FOREIGN KEY (comment_id) REFERENCES comments (id) ON UPDATE CASCADE ON DELETE CASCADE
     );
 
+INSERT INTO
+    users (id, name, email, password, role)
+VALUES (
+        "u001",
+        "Astrodev",
+        "astrodev@email.com",
+        "Admin001*",
+        "ADMIN"
+    );
+
 DROP TABLE post_comments;
 
 DROP TABLE likes_dislikes_post;
