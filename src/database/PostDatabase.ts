@@ -82,7 +82,7 @@ export class PostDatabase extends BaseDatabase {
     await BaseDatabase.connection(PostDatabase.TABLE_POSTS).del().where({ id });
   };
 
-  public findLikeDislike = async (
+  public findLikeOrDislikePost = async (
     likeOrDislike: LikeDislikePostDB
   ): Promise<POST_LIKE | undefined> => {
     const [result] = await BaseDatabase.connection(
@@ -108,7 +108,7 @@ export class PostDatabase extends BaseDatabase {
       });
   };
 
-  public updateLikeDislike = async (
+  public updateLikeOrDislike = async (
     likeOrDislike: LikeDislikePostDB
   ): Promise<void> => {
     await BaseDatabase.connection(PostDatabase.TABLE_LIKES_DISLIKES_POST)
@@ -119,7 +119,7 @@ export class PostDatabase extends BaseDatabase {
       });
   };
 
-  public insertLikeDislike = async (
+  public insertLikeOrDislike = async (
     likeOrDislike: LikeDislikePostDB
   ): Promise<void> => {
     await BaseDatabase.connection(

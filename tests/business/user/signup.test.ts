@@ -1,10 +1,10 @@
-import { UserBusiness } from "../../src/business/UserBusiness";
-import { SignupSchema } from "../../src/dtos/user/signup.dto";
-import { UserDatabaseMock } from "../mocks/UserDatabaseMock";
-import { IdGeneratorMock } from "../mocks/IdGeneratorMock";
-import { TokenManagerMock } from "../mocks/TokenManagerMock";
-import { HashManagerMock } from "../mocks/HashManagerMock";
-import { ConflictError } from "../../src/errors/ConflictError";
+import { UserBusiness } from "../../../src/business/UserBusiness";
+import { SignupSchema } from "../../../src/dtos/user/signup.dto";
+import { UserDatabaseMock } from "../../mocks/UserDatabaseMock";
+import { IdGeneratorMock } from "../../mocks/IdGeneratorMock";
+import { TokenManagerMock } from "../../mocks/TokenManagerMock";
+import { HashManagerMock } from "../../mocks/HashManagerMock";
+import { ConflictError } from "../../../src/errors/ConflictError";
 
 describe("Testando signup", () => {
   const userBusiness = new UserBusiness(

@@ -207,7 +207,7 @@ export class PostBusiness {
       like: likeSQLite,
     };
 
-    const likeDislikeExist = await this.postDatabase.findLikeDislike(
+    const likeDislikeExist = await this.postDatabase.findLikeOrDislikePost(
       likeOrDislikeDB
     );
 
@@ -216,21 +216,21 @@ export class PostBusiness {
         await this.postDatabase.removeLikeOrDislike(likeOrDislikeDB);
         post.removeLike();
       } else {
-        await this.postDatabase.updateLikeDislike(likeOrDislikeDB);
+        await this.postDatabase.updateLikeOrDislike(likeOrDislikeDB);
         post.removeLike();
         post.addDislike();
       }
     } else if (likeDislikeExist === POST_LIKE.ALREADY_DISLIKED) {
       if (like === false) {
-        await this.postDatabase.updateLikeDislike(likeOrDislikeDB);
+        await this.postDatabase.updateLikeOrDislike(likeOrDislikeDB);
         post.removeDislike();
       } else {
-        await this.postDatabase.updateLikeDislike(likeOrDislikeDB);
+        await this.postDatabase.updateLikeOrDislike(likeOrDislikeDB);
         post.removeDislike();
         post.addLike();
       }
     } else {
-      await this.postDatabase.insertLikeDislike(likeOrDislikeDB);
+      await this.postDatabase.insertLikeOrDislike(likeOrDislikeDB);
       like ? post.addLike() : post.addDislike();
     }
 
