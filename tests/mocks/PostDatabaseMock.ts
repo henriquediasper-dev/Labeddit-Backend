@@ -62,7 +62,22 @@ export class PostDatabaseMock extends BaseDatabase {
     return result as PostDBWithCreatorName | undefined;
   };
 
+  public findPostById = async (id: string): Promise<PostDB | undefined> => {
+    const result = postDBMock.find((post) => post.id === id);
+    return result as PostDB | undefined;
+  };
+
   public editPost = async (newPost: PostDB): Promise<void> => {};
+
+  public deletePost = async (id: string): Promise<void> => {
+    // Encontre o índice do post no array mock
+    const index = postDBMock.findIndex((post) => post.id === id);
+
+    // Se o post existir, remova-o do array
+    if (index !== -1) {
+      postDBMock.splice(index, 1);
+    }
+  };
 
   public findLikeOrDislikePost = async (
     likeDislikePost: LikeDislikePostDB
