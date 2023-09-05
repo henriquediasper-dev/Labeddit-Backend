@@ -1,4 +1,3 @@
-import { notDeepEqual } from "assert";
 import { CommentDatabase } from "../database/CommentDatabase";
 import { PostDatabase } from "../database/PostDatabase";
 import { UserDatabase } from "../database/UserDatabase";

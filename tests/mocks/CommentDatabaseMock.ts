@@ -123,4 +123,17 @@ export class CommentDatabaseMock extends BaseDatabase {
   ): Promise<void> => {};
 
   public editComment = async (newComment: CommentDB): Promise<void> => {};
+
+  public insertCommentIntoPostComment = async (
+    newComment: PostCommentDB
+  ): Promise<void> => {};
+
+  public findCommentsPostById = async (
+    postId: string
+  ): Promise<PostCommentModel[]> => {
+    const result = commentsDBMock.filter(
+      (commentDBMock) => commentDBMock.postId === postId
+    );
+    return result as PostCommentModel[];
+  };
 }
