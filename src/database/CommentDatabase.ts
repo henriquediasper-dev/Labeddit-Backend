@@ -121,7 +121,7 @@ export class CommentDatabase extends BaseDatabase {
       .update(likeOrDislike)
       .where({
         user_id: likeOrDislike.user_id,
-        post_id: likeOrDislike.comment_id,
+        comment_id: likeOrDislike.comment_id,
       });
   };
 
