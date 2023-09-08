@@ -26,7 +26,7 @@ https://dbdiagram.io/d/64f8b7ae02bd1c4a5e1824d8
 
 # Lista de requisitos
 
-- Documentação Postman de todos os endpoints (obrigatória para correção)
+- Documentação Postman de todos os endpoints
 
 - Endpoints
 
