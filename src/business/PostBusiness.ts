@@ -13,6 +13,7 @@ import {
   LikeOrDislikePostInputDTO,
   LikeOrDislikePostOutputDTO,
 } from "../dtos/post/likeOrDislikePost.dto";
+import { BadRequestError } from "../errors/BadRequestError";
 import { ForbiddenError } from "../errors/ForbiddenError";
 import { NotFoundError } from "../errors/NotFoundError";
 import { UnauthorizedError } from "../errors/UnauthorizedError";
@@ -186,6 +187,12 @@ export class PostBusiness {
 
     if (!postDBWithCreatorName) {
       throw new NotFoundError("Post com essa id não existe");
+    }
+
+    if (postDBWithCreatorName.creator_id === payload.id) {
+      throw new BadRequestError(
+        "O criador do post não pode dar like ou dislike em seu próprio post!"
+      );
     }
 
     const post = new Post(
