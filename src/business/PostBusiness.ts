@@ -222,7 +222,7 @@ export class PostBusiness {
       }
     } else if (likeDislikeExist === POST_LIKE.ALREADY_DISLIKED) {
       if (like === false) {
-        await this.postDatabase.updateLikeOrDislike(likeOrDislikeDB);
+        await this.postDatabase.removeLikeOrDislike(likeOrDislikeDB);
         post.removeDislike();
       } else {
         await this.postDatabase.updateLikeOrDislike(likeOrDislikeDB);
