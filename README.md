@@ -428,4 +428,8 @@ Agora você está pronto para explorar e testar a API do Labook Backend em seu a
 
 # Documentação Postman
 
-https://documenter.getpostman.com/view/27681059/2s9YC1VZCs
+[Documentacao](https://documenter.getpostman.com/view/27681059/2s9YC1VZCs)
+
+# Link Render
+
+[Render](https://labeddit-api-gtwv.onrender.com)
