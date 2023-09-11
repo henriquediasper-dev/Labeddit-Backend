@@ -2,6 +2,8 @@
 
 O Labeddit é uma rede social que permite aos usuários fazer postagens em texto, com a opção de receber likes e dislikes, além de comentários que também podem ser avaliados dessa forma. O objetivo é promover interação e conexão entre as pessoas de forma transparente e envolvente.
 
+🚩 [Projeto Labeddit - Frontend](https://github.com/henriquediasper-dev/Labeddit-Frontend)
+
 # Conteúdos abordados
 
 - NodeJS
