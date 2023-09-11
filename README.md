@@ -432,4 +432,4 @@ Agora você está pronto para explorar e testar a API do Labook Backend em seu a
 
 # Link Render
 
-[Render](https://labeddit-api-gtwv.onrender.com)
+https://labeddit-api-gtwv.onrender.com
